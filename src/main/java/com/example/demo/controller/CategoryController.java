@@ -31,9 +31,13 @@ public class CategoryController {
     public CategoryPojo createBakery(@RequestBody CategoryPojo bakeryPojo){
         return categoryService.create(bakeryPojo);
     }
-    @DeleteMapping("{id}")
-    public boolean deleteBakery(@PathVariable("id") UUID id){
-        return categoryService.delete(id);
+    @PutMapping
+    public CategoryPojo updateBakery(@RequestBody CategoryPojo bakeryPojo){
+        return categoryService.update(bakeryPojo);
+    }
+    @DeleteMapping
+    public void deleteBakery(@RequestParam UUID id){
+        categoryService.delete(id);
     }
 
 }

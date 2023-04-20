@@ -33,10 +33,13 @@ public class CategoryService {
     public CategoryPojo create(CategoryPojo bakeryPojo) {
         bakeryPojo.setId(UUID.randomUUID());
         return CategoryPojo.fromEntity(categoryRepository.save(CategoryPojo.toEntity(bakeryPojo)));
+    }
 
+    public CategoryPojo update(CategoryPojo bakeryPojo) {
+        return CategoryPojo.fromEntity(categoryRepository.save(CategoryPojo.toEntity(bakeryPojo)));
     }
     //TODO сделать!!!
-    public boolean delete(UUID id) {
-        return false;
+    public void delete(UUID id) {
+        categoryRepository.deleteById(id);
     }
 }

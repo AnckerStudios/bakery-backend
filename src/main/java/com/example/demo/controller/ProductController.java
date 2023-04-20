@@ -1,9 +1,22 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ProductBakeryPojo;
 import com.example.demo.dto.ProductPojo;
 import com.example.demo.service.ProductService;
+import jakarta.servlet.annotation.MultipartConfig;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,7 +24,7 @@ import java.util.UUID;
 @RequestMapping("/api/product")
 public class ProductController {
     private final ProductService productService;
-
+    private Path path = Paths.get("uploads");
     public ProductController(ProductService productService){
         this.productService = productService;
     }
@@ -40,12 +53,31 @@ public class ProductController {
 //        return bakeryService.findIngredientByName();
 //    }
 
-    @PostMapping
-    public ProductPojo createIngredient(@RequestBody ProductPojo drinkProductPojo){
-        return productService.create(drinkProductPojo);
+    @PostMapping("{bakery_id}")
+    public ProductPojo createProduct(@RequestBody ProductPojo productPojo, @PathVariable UUID bakeryId){
+        return productService.create(productPojo, bakeryId);
     }
     @DeleteMapping("{id}")
     public boolean deleteIngredient(@PathVariable("id") UUID id){
         return productService.delete(id);
+    }
+
+    @PostMapping(value = "/createIn/{bakery_id}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ProductBakeryPojo createProduct2(@RequestPart("product") ProductPojo product, @RequestPart("image") MultipartFile image,
+                                            @RequestParam("price") int price, @PathVariable("bakery_id") UUID bakeryId
+    ){
+        System.out.println("product "+ product);
+        System.out.println("file "+ image);
+        return productService.createProduct2(product,image,price,bakeryId);
+    }
+
+    @GetMapping("image/{product_id}")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable("product_id")UUID productId) throws IOException {
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(productService.getProductImage(productId));
+    }
+
+    @GetMapping("not/{bakery_id}")
+    public ProductPojo getProductNotBakery(@PathVariable("bakery_id")UUID bakeryId){
+        return productService.getProductNotBakery(bakeryId);
     }
 }

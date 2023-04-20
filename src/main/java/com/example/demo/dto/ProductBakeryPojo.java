@@ -17,14 +17,13 @@ public class ProductBakeryPojo {
     BakeryPojo bakery;
     ProductPojo product;
     int price;
-    int value;
     public static ProductBakery toEntity(ProductBakeryPojo pojo){
         ProductBakery entity = new ProductBakery();
 
         entity.setBakery(BakeryPojo.toEntity(pojo.getBakery()));
         entity.setProduct(ProductPojo.toEntity(pojo.getProduct()));
         entity.setPrice(pojo.getPrice());
-        entity.setValue(pojo.getValue());
+
         return entity;
     }
     public static ProductBakeryPojo fromEntity(ProductBakery entity){
@@ -33,7 +32,6 @@ public class ProductBakeryPojo {
         pojo.setBakery(BakeryPojo.fromEntity(entity.getBakery()));
         pojo.setProduct(ProductPojo.fromEntity(entity.getProduct()));
         pojo.setPrice(entity.getPrice());
-        pojo.setValue(entity.getValue());
         return pojo;
     }
 }

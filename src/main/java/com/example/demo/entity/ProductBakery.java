@@ -23,7 +23,7 @@ public class ProductBakery {
     @Id
     @ManyToOne
     @MapsId("productId")
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT))
     Product product;
 //    @Id
 //    UUID bakeryId;
@@ -31,5 +31,4 @@ public class ProductBakery {
 //    UUID productId;
 
     int price;
-    int value;
 }

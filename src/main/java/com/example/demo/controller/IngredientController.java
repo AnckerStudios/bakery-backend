@@ -34,7 +34,7 @@ public class IngredientController {
         return ingredientService.create(ingredientPojo);
     }
     @DeleteMapping("{id}")
-    public boolean deleteIngredient(@PathVariable("id") UUID id){
-        return ingredientService.delete(id);
+    public void deleteIngredient(@PathVariable("id") UUID id){
+        ingredientService.delete(id);
     }
 }

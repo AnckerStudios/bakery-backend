@@ -22,7 +22,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     Category category;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<ProductBakery> productBakeries;
 
 

@@ -17,26 +17,21 @@ public class ProductPojo {
     UUID id;
     String name;
     int volume;
-    UUID category;
+    CategoryPojo category;
     //List<UUID> productBakeries;
-    List<UUID> ingredients;
-
+    List<IngredientPojo> ingredients;
 
 
     public static Product toEntity(ProductPojo pojo){
         Product entity = new Product();
         entity.setId(pojo.getId());
         entity.setName(pojo.getName());
-        Category addCategory = new Category();
-        addCategory.setId(pojo.getCategory());
-        entity.setCategory(addCategory);
+        entity.setCategory(CategoryPojo.toEntity(pojo.getCategory()));
         List<Ingredient> products = new ArrayList<>();
         entity.setIngredients(products);
-
-        for(UUID uuid : pojo.getIngredients()){
-            Ingredient ingredient = new Ingredient();
-            ingredient.setId(uuid);
-            products.add(ingredient);
+        entity.setVolume(pojo.getVolume());
+        for(IngredientPojo ingredient : pojo.getIngredients()){
+            products.add(IngredientPojo.toEntity(ingredient));
         }
         return entity;
     }
@@ -44,11 +39,12 @@ public class ProductPojo {
         ProductPojo pojo = new ProductPojo();
         pojo.setId(entity.getId());
         pojo.setName(entity.getName());
-        pojo.setCategory(entity.getCategory().getId());
-        List<UUID> ingredientPojos = new ArrayList<>();
+        pojo.setCategory(CategoryPojo.fromEntity(entity.getCategory()));
+        pojo.setVolume(entity.getVolume());
+        List<IngredientPojo> ingredientPojos = new ArrayList<>();
         pojo.setIngredients(ingredientPojos);
         for(Ingredient ingredientPojo : entity.getIngredients()){
-            ingredientPojos.add(ingredientPojo.getId());
+            ingredientPojos.add(IngredientPojo.fromEntity(ingredientPojo));
         }
         return pojo;
     }

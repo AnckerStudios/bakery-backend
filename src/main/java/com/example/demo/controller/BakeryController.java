@@ -20,6 +20,7 @@ public class BakeryController {
 
     @GetMapping
     public List<BakeryPojo> findAll(){
+        System.out.println("saaaaaaaaaa");
         return bakeryService.findAll();
     }
     @GetMapping("findById/{id}")
@@ -40,6 +41,8 @@ public class BakeryController {
         return bakeryService.delete(id);
     }
 
+    
+    
 //    @GetMapping("{bakery_id}/add/{product_id}")
 //    public BakeryPojo addProductInBakery(@PathVariable("bakery_id") UUID productId, @PathVariable("product_id") UUID ingredientId){
 //        return bakeryService.addProductInBakery(productId,ingredientId);

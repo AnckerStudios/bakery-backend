@@ -6,10 +6,17 @@ import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductBakery;
 import com.example.demo.repository.BakeryRepository;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductBakeryRepository;
 import com.example.demo.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +28,15 @@ public class ProductBakeryService {
     private final ProductBakeryRepository productBakeryRepository;
     private final BakeryRepository bakeryRepository;
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
 
-    public ProductBakeryService(ProductBakeryRepository productBakeryRepository, BakeryRepository bakeryRepository, ProductRepository productRepository) {
+    public ProductBakeryService(ProductBakeryRepository productBakeryRepository, BakeryRepository bakeryRepository, ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productBakeryRepository = productBakeryRepository;
         this.bakeryRepository = bakeryRepository;
 
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<ProductBakeryPojo> findAll() {
@@ -35,17 +44,16 @@ public class ProductBakeryService {
     }
 
     public List<ProductCategoriesPojo> findByBakery(UUID bakeryId){
-        List<ProductBakery> list = productBakeryRepository.findByBakery_Id(bakeryId);
+        List<ProductBakeryPojo> list = productBakeryRepository.findByBakery_Id(bakeryId).stream().map(ProductBakeryPojo::fromEntity).toList();
         HashMap<UUID, ProductCategoriesPojo> map = new HashMap<>();
-        for (ProductBakery item : list) {
-            Category category = item.getProduct().getCategory();
+        for (ProductBakeryPojo item : list) {
+            CategoryPojo category = item.getProduct().getCategory();
             if(map.containsKey(category.getId())){
-                map.get(category.getId()).getProducts().add(ProductPojo.fromEntity(item.getProduct()));
+                map.get(category.getId()).getProductBakerys().add(item);
             }else{
                 map.put(category.getId(), new ProductCategoriesPojo(
-                        BakeryPojo.fromEntity(item.getBakery()),
-                        CategoryPojo.fromEntity(category),
-                        new ArrayList<>(List.of(ProductPojo.fromEntity(item.getProduct())))
+                        category,
+                        new ArrayList<>(List.of(item))
                         //List.of(ProductPojo.fromEntity(item.getProduct()))
                         )
                 );
@@ -85,7 +93,6 @@ public class ProductBakeryService {
         productBakery.setProduct(product);
         productBakery.setBakery(bakery);
         productBakery.setPrice(100);
-        productBakery.setValue(100);
         return ProductBakeryPojo.fromEntity(productBakeryRepository.save(productBakery)).getBakery();
     }
 
@@ -96,5 +103,51 @@ public class ProductBakeryService {
 //        Product product = productRepository.findById(productId).orElseThrow();
 //        drink.getIngredients().remove(ingredientRepository.findById(ingredientId).orElseThrow());
 //        return DrinkProductPojo.fromEntity(drinkProductRepository.save(drink));
+    }
+
+    public ProductBakeryPojo createProductInBakery(ProductBakeryPojo productBakeryPojo) {
+        Product product = ProductPojo.toEntity(productBakeryPojo.getProduct());
+        product.setId(UUID.randomUUID());
+        System.out.println(product);
+        Bakery bakery = BakeryPojo.toEntity(productBakeryPojo.getBakery());
+        ProductBakery productBakery = new ProductBakery();
+        productBakery.setBakery(bakery);
+        productBakery.setProduct(product);
+        productBakery.setPrice(productBakeryPojo.getPrice());
+        product.setProductBakeries(List.of(productBakery));
+        //System.out.println(product);
+        productRepository.save(product);
+//        ProductBakery entity = new ProductBakery();
+//        entity.setBakery(bakery);
+//        entity.setProduct(product);
+//        entity.setPrice(productBakeryPojo.getPrice());
+//        System.out.println(entity);
+//        ProductBakery res = productBakeryRepository.save(entity);
+        return productBakeryPojo;
+    }
+
+    public ProductBakeryPojo createProduct2(ProductBakeryPojo productBakeryPojo, MultipartFile image) {
+        System.out.println("1 productPojo "+ productBakeryPojo);
+        System.out.println("2 image "+ image);
+
+        Product product = ProductPojo.toEntity(productBakeryPojo.getProduct());
+        product.setId(UUID.randomUUID());
+        Bakery bakery = bakeryRepository.findById(productBakeryPojo.getBakery().getId()).orElseThrow();
+        ProductBakery productBakery = new ProductBakery();
+        productBakery.setBakery(bakery);
+        productBakery.setProduct(product);
+        productBakery.setPrice(productBakeryPojo.getPrice());
+        product.setProductBakeries(List.of(productBakery));
+        System.out.println("type image "+ image.getContentType());
+        File file = new File("src/main/resources/"+product.getId()+".png");
+        try {
+            file.createNewFile();
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(image.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ProductBakeryPojo.fromEntity(productBakeryRepository.save(productBakery));
     }
 }
