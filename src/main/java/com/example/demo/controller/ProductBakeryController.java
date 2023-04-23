@@ -36,7 +36,7 @@ public class ProductBakeryController {
         return bakeryService.findAll();
     }
     @GetMapping("findByBakery/{bakery_id}")
-    public List<ProductCategoriesPojo> findByBakery(@PathVariable("bakery_id") UUID bakeryId){
+    public List<ProductBakeryPojo> findByBakery(@PathVariable("bakery_id") UUID bakeryId){
         //System.out.println(bakeryService.findByBakery(bakeryId));
         return bakeryService.findByBakery(bakeryId);
 
@@ -46,7 +46,7 @@ public class ProductBakeryController {
         return bakeryService.addProductInBakery(bakeryId,productId);
     }
 
-    @GetMapping("{bakery_id}/del/{product_id}")
+    @DeleteMapping("{bakery_id}/del/{product_id}")
     public void delProductInBakery(@PathVariable("bakery_id") UUID productId,@PathVariable("product_id") UUID ingredientId){
         bakeryService.delProductInBakery(productId,ingredientId);
     }

@@ -37,8 +37,8 @@ public class BakeryController {
         return bakeryService.create(bakeryPojo);
     }
     @DeleteMapping("{id}")
-    public boolean deleteBakery(@PathVariable("id") UUID id){
-        return bakeryService.delete(id);
+    public void deleteBakery(@PathVariable("id") UUID id){
+         bakeryService.delete(id);
     }
 
     

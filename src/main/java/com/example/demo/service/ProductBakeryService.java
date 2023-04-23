@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.*;
-import com.example.demo.entity.Bakery;
-import com.example.demo.entity.Category;
-import com.example.demo.entity.Product;
-import com.example.demo.entity.ProductBakery;
+import com.example.demo.entity.*;
 import com.example.demo.repository.BakeryRepository;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductBakeryRepository;
@@ -43,24 +40,24 @@ public class ProductBakeryService {
         return productBakeryRepository.findAll().stream().map(ProductBakeryPojo::fromEntity).collect(Collectors.toList());
     }
 
-    public List<ProductCategoriesPojo> findByBakery(UUID bakeryId){
-        List<ProductBakeryPojo> list = productBakeryRepository.findByBakery_Id(bakeryId).stream().map(ProductBakeryPojo::fromEntity).toList();
-        HashMap<UUID, ProductCategoriesPojo> map = new HashMap<>();
-        for (ProductBakeryPojo item : list) {
-            CategoryPojo category = item.getProduct().getCategory();
-            if(map.containsKey(category.getId())){
-                map.get(category.getId()).getProductBakerys().add(item);
-            }else{
-                map.put(category.getId(), new ProductCategoriesPojo(
-                        category,
-                        new ArrayList<>(List.of(item))
-                        //List.of(ProductPojo.fromEntity(item.getProduct()))
-                        )
-                );
-            }
-        }
-
-        return map.values().stream().toList();
+    public List<ProductBakeryPojo> findByBakery(UUID bakeryId){
+        return productBakeryRepository.findByBakery_Id(bakeryId).stream().map(ProductBakeryPojo::fromEntity).toList();
+//        HashMap<UUID, ProductCategoriesPojo> map = new HashMap<>();
+//        for (ProductBakeryPojo item : list) {
+//            CategoryPojo category = item.getProduct().getCategory();
+//            if(map.containsKey(category.getId())){
+//                map.get(category.getId()).getProductBakerys().add(item);
+//            }else{
+//                map.put(category.getId(), new ProductCategoriesPojo(
+//                        category,
+//                        new ArrayList<>(List.of(item))
+//                        //List.of(ProductPojo.fromEntity(item.getProduct()))
+//                        )
+//                );
+//            }
+//        }
+//
+//        return map.values().stream().toList();
 
     }
 
@@ -97,12 +94,16 @@ public class ProductBakeryService {
     }
 
     public void delProductInBakery(UUID bakeryId, UUID productId) {
-////        ProductBakery productBakery = productBakeryRepository.findById()
-//        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow();
+
+
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow();
 //
-//        Product product = productRepository.findById(productId).orElseThrow();
+       Product product = productRepository.findById(productId).orElseThrow();
+       ProductBakeryPK pk = new ProductBakeryPK();
+       pk.setProduct(product);
+       pk.setBakery(bakery);
 //        drink.getIngredients().remove(ingredientRepository.findById(ingredientId).orElseThrow());
-//        return DrinkProductPojo.fromEntity(drinkProductRepository.save(drink));
+        productBakeryRepository.deleteById(pk);
     }
 
     public ProductBakeryPojo createProductInBakery(ProductBakeryPojo productBakeryPojo) {

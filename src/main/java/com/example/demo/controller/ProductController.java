@@ -53,13 +53,14 @@ public class ProductController {
 //        return bakeryService.findIngredientByName();
 //    }
 
-    @PostMapping("{bakery_id}")
-    public ProductPojo createProduct(@RequestBody ProductPojo productPojo, @PathVariable UUID bakeryId){
-        return productService.create(productPojo, bakeryId);
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ProductPojo createProduct(@RequestPart("product") ProductPojo product, @RequestPart("image") MultipartFile image){
+        return productService.save(product,image);
     }
     @DeleteMapping("{id}")
-    public boolean deleteIngredient(@PathVariable("id") UUID id){
-        return productService.delete(id);
+    public void deleteIngredient(@PathVariable("id") UUID id){
+        System.out.println("ggggggggggg");
+        productService.delete(id);
     }
 
     @PostMapping(value = "/createIn/{bakery_id}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -77,7 +78,7 @@ public class ProductController {
     }
 
     @GetMapping("not/{bakery_id}")
-    public ProductPojo getProductNotBakery(@PathVariable("bakery_id")UUID bakeryId){
-        return productService.getProductNotBakery(bakeryId);
+    public List<ProductPojo> getProductsNotBakery(@PathVariable("bakery_id")UUID bakeryId){
+        return productService.getProductsNotBakery(bakeryId);
     }
 }

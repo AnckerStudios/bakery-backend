@@ -37,8 +37,8 @@ public class BakeryService {
 
     }
 //TODO сделать!!!
-    public boolean delete(UUID id) {
-        return false;
+    public void delete(UUID id) {
+        bakeryRepository.deleteById(id);
     }
 
 //    public BakeryPojo addProductInBakery(UUID bakeryId, UUID productId) {

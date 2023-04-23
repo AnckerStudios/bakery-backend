@@ -50,15 +50,23 @@ public class ProductService {
 //        return bakeryRepository.findByName().stream().map(BakeryPojo::fromEntity).collect(Collectors.toList());
 //    }
 
-    public ProductPojo create(ProductPojo productPojo, UUID bakeryId) {
-        productPojo.setId(UUID.randomUUID());
-        Product entity = ProductPojo.toEntity(productPojo);
+    public ProductPojo save(ProductPojo productPojo, MultipartFile image) {
+        if(productPojo.getId() == null)
+            productPojo.setId(UUID.randomUUID());
+        File file = new File("src/main/resources/"+productPojo.getId()+".png");
+        try {
+            file.createNewFile();
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(image.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return ProductPojo.fromEntity(productRepository.save(ProductPojo.toEntity(productPojo)));
 
     }
 
-    public boolean delete(UUID id) {
-        return false;
+    public void delete(UUID id) {
+        productRepository.deleteById(id);
     }
 
     public ProductPojo addIngredientInProduct(UUID productId, UUID ingredientId) {
@@ -105,7 +113,9 @@ public class ProductService {
         return Files.readAllBytes(new File("src/main/resources/"+productId+".png").toPath());
     }
 
-    public ProductPojo getProductNotBakery(UUID bakeryId) {
-        return ProductPojo.fromEntity(productRepository.getProductNotBakery(bakeryId));
+    public List<ProductPojo> getProductsNotBakery(UUID bakeryId) {
+        List<ProductPojo> list = productRepository.getProductNotBakery(bakeryId).stream().map(ProductPojo::fromEntity).toList();
+        System.out.println(list.size());
+        return list;
     }
 }
