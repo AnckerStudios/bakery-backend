@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,40 +54,42 @@ public class ProductService {
     public ProductPojo save(ProductPojo productPojo, MultipartFile image) {
         if(productPojo.getId() == null)
             productPojo.setId(UUID.randomUUID());
-        File file = new File("src/main/resources/"+productPojo.getId()+".png");
-        try {
+        File file = new File(Utils.IMAGE_PATH.getPath()+productPojo.getId()+".png");
+
+        try(FileOutputStream out = new FileOutputStream(file);) {
             file.createNewFile();
-            FileOutputStream out = new FileOutputStream(file);
             out.write(image.getBytes());
-        } catch (IOException e) {
+            return ProductPojo.fromEntity(productRepository.save(ProductPojo.toEntity(productPojo)));
+        }catch (Exception e){
+            if(file.exists())
+                file.delete();
             throw new RuntimeException(e);
         }
-        return ProductPojo.fromEntity(productRepository.save(ProductPojo.toEntity(productPojo)));
 
-    }
+
+        }
 
     public void delete(UUID id) {
+        File file = new File(Utils.IMAGE_PATH.getPath()+id+".png");
+        if(file.exists())
+            file.delete();
         productRepository.deleteById(id);
     }
 
-    public ProductPojo addIngredientInProduct(UUID productId, UUID ingredientId) {
-        Product drink = productRepository.findById(productId).get();
-        Ingredient ingredient = new Ingredient();
-        ingredient.setId(ingredientId);
-        drink.getIngredients().add(ingredient);
-        return ProductPojo.fromEntity(productRepository.save(drink));
-    }
-    public ProductPojo delIngredientInProduct(UUID productId, UUID ingredientId) {
-        Product drink = productRepository.findById(productId).orElseThrow();
-        drink.getIngredients().remove(ingredientRepository.findById(ingredientId).orElseThrow());
-        return ProductPojo.fromEntity(productRepository.save(drink));
-    }
+//    public ProductPojo addIngredientInProduct(UUID productId, UUID ingredientId) {
+//        Product drink = productRepository.findById(productId).get();
+//        Ingredient ingredient = new Ingredient();
+//        ingredient.setId(ingredientId);
+//        drink.getIngredients().add(ingredient);
+//        return ProductPojo.fromEntity(productRepository.save(drink));
+//    }
+//    public ProductPojo delIngredientInProduct(UUID productId, UUID ingredientId) {
+//        Product drink = productRepository.findById(productId).orElseThrow();
+//        drink.getIngredients().remove(ingredientRepository.findById(ingredientId).orElseThrow());
+//        return ProductPojo.fromEntity(productRepository.save(drink));
+//    }
 
     public ProductBakeryPojo createProduct2(ProductPojo productPojo, MultipartFile image, int price, UUID bakeryId) {
-        System.out.println("1 productPojo "+ productPojo);
-        System.out.println("2 image "+ image);
-        System.out.println("3 price "+ price);
-        System.out.println("4 bakeryId "+ bakeryId);
         Product product = ProductPojo.toEntity(productPojo);
         product.setId(UUID.randomUUID());
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow();
@@ -95,8 +98,7 @@ public class ProductService {
         productBakery.setProduct(product);
         productBakery.setPrice(price);
         product.setProductBakeries(List.of(productBakery));
-        System.out.println("type image "+ image.getContentType());
-        File file = new File("src/main/resources/"+product.getId()+".png");
+        File file = new File(Utils.IMAGE_PATH.getPath()+product.getId()+".png");
         try {
             file.createNewFile();
             FileOutputStream out = new FileOutputStream(file);
@@ -110,7 +112,7 @@ public class ProductService {
 
     public byte[] getProductImage(UUID productId) throws IOException {
         Product product = productRepository.findById(productId).orElseThrow();
-        return Files.readAllBytes(new File("src/main/resources/"+productId+".png").toPath());
+        return Files.readAllBytes(new File(Utils.IMAGE_PATH.getPath()+productId+".png").toPath());
     }
 
     public List<ProductPojo> getProductsNotBakery(UUID bakeryId) {

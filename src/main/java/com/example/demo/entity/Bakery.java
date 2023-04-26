@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -14,12 +15,13 @@ import java.util.UUID;
 @Entity
 public class Bakery {
     @Id
-    UUID id;
-    String address;
-    String name;
+    private UUID id;
+    private String address;
+    @Column(unique = true)
+    private String name;
 
     @OneToMany(mappedBy = "bakery")
-    List<ProductBakery> productBakeries;
+    private List<ProductBakery> productBakeries;
 
 
 }

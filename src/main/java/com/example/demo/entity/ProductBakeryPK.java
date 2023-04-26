@@ -10,9 +10,9 @@ import java.util.UUID;
 @Data
 public class ProductBakeryPK implements Serializable {
     //@Column(name = "bakery_id")
-    Bakery bakery;
+    private Bakery bakery;
     //@Column(name = "product_id")
-    Product product;
+    private Product product;
 
 
 

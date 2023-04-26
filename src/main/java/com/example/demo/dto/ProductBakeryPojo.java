@@ -14,9 +14,9 @@ import java.util.List;
 
 @Data
 public class ProductBakeryPojo {
-    BakeryPojo bakery;
-    ProductPojo product;
-    int price;
+    private BakeryPojo bakery;
+    private ProductPojo product;
+    private int price;
     public static ProductBakery toEntity(ProductBakeryPojo pojo){
         ProductBakery entity = new ProductBakery();
 

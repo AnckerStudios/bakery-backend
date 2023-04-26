@@ -1,9 +1,6 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +15,11 @@ public class Category {
 
     @Id
     private UUID id;
+    @Column(unique = true)
     private String name;
     private boolean isDrink;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Product> products;
 
     public Category() {
@@ -48,7 +46,7 @@ public class Category {
     }
 
     public void setIsDrink(boolean isDrink) {
-        isDrink = isDrink;
+        this.isDrink = isDrink;
     }
 
     public List<Product> getProducts() {

@@ -33,10 +33,8 @@ public class IngredientService {
     }
 
     public IngredientPojo create(IngredientPojo ingredientPojo) {
-        System.out.println(ingredientPojo);
-        if(ingredientPojo.getId() == null) {
+        if(ingredientPojo.getId() == null)
             ingredientPojo.setId(UUID.randomUUID());
-        }
         return IngredientPojo.fromEntity(ingredientRepository.save(IngredientPojo.toEntity(ingredientPojo)));
 
     }

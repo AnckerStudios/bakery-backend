@@ -42,8 +42,8 @@ public class ProductBakeryController {
 
     }
     @GetMapping("{bakery_id}/add/{product_id}")
-    public BakeryPojo addProductInBakery(@PathVariable("bakery_id") UUID bakeryId, @PathVariable("product_id") UUID productId){
-        return bakeryService.addProductInBakery(bakeryId,productId);
+    public ProductBakeryPojo addProductInBakery(@PathVariable("bakery_id") UUID bakeryId, @PathVariable("product_id") UUID productId,@RequestParam("price") int price){
+        return bakeryService.addProductInBakery(bakeryId,productId,price);
     }
 
     @DeleteMapping("{bakery_id}/del/{product_id}")
@@ -62,25 +62,5 @@ public class ProductBakeryController {
         System.out.println("file "+ image);
         return bakeryService.createProduct2(productBakery,image);
     }
-    ServletContext servletContext;
-//    @GetMapping("/bla")
-//    public List<ProductPojo> testBla(MultipartFile s){
-//        List<ProductPojo> list = new TestImg();
-//        try {
-//            array.setImg(Files.readAllBytes(Paths.get("src/main/resources/targetFile.png")));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return array;
-//
-//
-////        BufferedImage myPicture = null;
-////        try {
-////            myPicture = ImageIO.read(new File("src/main/resources/targetFile.png"));
-////        } catch (IOException e) {
-////            throw new RuntimeException(e);
-////        }
-////        return myPicture;
-//    }
 
 }

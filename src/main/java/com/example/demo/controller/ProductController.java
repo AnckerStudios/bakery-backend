@@ -39,15 +39,15 @@ public class ProductController {
         return productService.findIngredientById(id);
     }
 
-    @GetMapping("{product_id}/addIngredient/{ingredient_id}")
-    public ProductPojo addIngredientInProduct(@PathVariable("product_id") UUID productId,@PathVariable("ingredient_id") UUID ingredientId){
-        return productService.addIngredientInProduct(productId,ingredientId);
-    }
-
-    @GetMapping("{product_id}/delIngredient/{ingredient_id}")
-    public void delIngredientInProduct(@PathVariable("product_id") UUID productId,@PathVariable("ingredient_id") UUID ingredientId){
-        productService.delIngredientInProduct(productId,ingredientId);
-    }
+//    @GetMapping("{product_id}/addIngredient/{ingredient_id}")
+//    public ProductPojo addIngredientInProduct(@PathVariable("product_id") UUID productId,@PathVariable("ingredient_id") UUID ingredientId){
+//        return productService.addIngredientInProduct(productId,ingredientId);
+//    }
+//
+//    @GetMapping("{product_id}/delIngredient/{ingredient_id}")
+//    public void delIngredientInProduct(@PathVariable("product_id") UUID productId,@PathVariable("ingredient_id") UUID ingredientId){
+//        productService.delIngredientInProduct(productId,ingredientId);
+//    }
 //    @GetMapping("/findByName/{name}")
 //    public List<BakeryPojo> findIngredientByName(@PathVariable("name") String name){
 //        return bakeryService.findIngredientByName();

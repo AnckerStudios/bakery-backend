@@ -1,9 +1,6 @@
 package com.example.demo.dto;
 
-import com.example.demo.entity.Category;
-import com.example.demo.entity.Ingredient;
-import com.example.demo.entity.Product;
-import com.example.demo.entity.ProductBakery;
+import com.example.demo.entity.*;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,12 +11,12 @@ import java.util.UUID;
 @Data
 public class ProductPojo {
 
-    UUID id;
-    String name;
-    int volume;
-    CategoryPojo category;
+    private UUID id;
+    private String name;
+    private int volume;
+    private CategoryPojo category;
     //List<UUID> productBakeries;
-    List<IngredientPojo> ingredients;
+    private List<IngredientPojo> ingredients;
 
 
     public static Product toEntity(ProductPojo pojo){
@@ -27,11 +24,15 @@ public class ProductPojo {
         entity.setId(pojo.getId());
         entity.setName(pojo.getName());
         entity.setCategory(CategoryPojo.toEntity(pojo.getCategory()));
-        List<Ingredient> products = new ArrayList<>();
-        entity.setIngredients(products);
         entity.setVolume(pojo.getVolume());
+        List<IngredientProduct> products = new ArrayList<>();
+        entity.setIngredientProducts(products);
+
         for(IngredientPojo ingredient : pojo.getIngredients()){
-            products.add(IngredientPojo.toEntity(ingredient));
+            IngredientProduct ingredientProduct = new IngredientProduct();
+            ingredientProduct.setProduct(entity);
+            ingredientProduct.setIngredient(IngredientPojo.toEntity(ingredient));
+            products.add(ingredientProduct);
         }
         return entity;
     }
@@ -43,8 +44,8 @@ public class ProductPojo {
         pojo.setVolume(entity.getVolume());
         List<IngredientPojo> ingredientPojos = new ArrayList<>();
         pojo.setIngredients(ingredientPojos);
-        for(Ingredient ingredientPojo : entity.getIngredients()){
-            ingredientPojos.add(IngredientPojo.fromEntity(ingredientPojo));
+        for(IngredientProduct ingredientPojo : entity.getIngredientProducts()){
+            ingredientPojos.add(IngredientPojo.fromEntity(ingredientPojo.getIngredient()));
         }
         return pojo;
     }

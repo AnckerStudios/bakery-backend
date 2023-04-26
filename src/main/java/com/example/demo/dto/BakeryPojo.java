@@ -11,9 +11,9 @@ import java.util.UUID;
 
 @Data
 public class BakeryPojo {
-    UUID id;
-    String address;
-    String name;
+    private UUID id;
+    private String address;
+    private String name;
     //List<BakeryCategoryPojo> bakeryCategoryPojos;
 
     public static Bakery toEntity(BakeryPojo pojo){

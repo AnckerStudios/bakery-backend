@@ -31,7 +31,8 @@ public class CategoryService {
     }
 
     public CategoryPojo create(CategoryPojo bakeryPojo) {
-        bakeryPojo.setId(UUID.randomUUID());
+        if(bakeryPojo.getId() == null)
+            bakeryPojo.setId(UUID.randomUUID());
         return CategoryPojo.fromEntity(categoryRepository.save(CategoryPojo.toEntity(bakeryPojo)));
     }
 

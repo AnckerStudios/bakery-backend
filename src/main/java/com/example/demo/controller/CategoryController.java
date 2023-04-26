@@ -29,6 +29,7 @@ public class CategoryController {
 
     @PostMapping
     public CategoryPojo createBakery(@RequestBody CategoryPojo bakeryPojo){
+        System.out.println(bakeryPojo.getIsDrink());
         return categoryService.create(bakeryPojo);
     }
     @PutMapping

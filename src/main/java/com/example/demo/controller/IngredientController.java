@@ -35,6 +35,7 @@ public class IngredientController {
     }
     @DeleteMapping("{id}")
     public void deleteIngredient(@PathVariable("id") UUID id){
+
         ingredientService.delete(id);
     }
 }

@@ -83,14 +83,14 @@ public class ProductBakeryService {
         return false;
     }
     //TODO исправить
-    public BakeryPojo addProductInBakery(UUID bakeryId, UUID productId) {
+    public ProductBakeryPojo addProductInBakery(UUID bakeryId, UUID productId, int price) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow();
         Product product = productRepository.findById(productId).orElseThrow();
         ProductBakery productBakery = new ProductBakery();
         productBakery.setProduct(product);
         productBakery.setBakery(bakery);
-        productBakery.setPrice(100);
-        return ProductBakeryPojo.fromEntity(productBakeryRepository.save(productBakery)).getBakery();
+        productBakery.setPrice(price);
+        return ProductBakeryPojo.fromEntity(productBakeryRepository.save(productBakery));
     }
 
     public void delProductInBakery(UUID bakeryId, UUID productId) {
@@ -140,7 +140,7 @@ public class ProductBakeryService {
         productBakery.setPrice(productBakeryPojo.getPrice());
         product.setProductBakeries(List.of(productBakery));
         System.out.println("type image "+ image.getContentType());
-        File file = new File("src/main/resources/"+product.getId()+".png");
+        File file = new File(Utils.IMAGE_PATH.getPath()+product.getId()+".png");
         try {
             file.createNewFile();
             FileOutputStream out = new FileOutputStream(file);

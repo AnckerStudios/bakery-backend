@@ -12,8 +12,8 @@ import java.util.List;
 @Setter
 public class ProductCategoriesPojo {
 
-    CategoryPojo category;
-    List<ProductBakeryPojo> productBakerys;
+    private CategoryPojo category;
+    private List<ProductBakeryPojo> productBakerys;
 
 
 }

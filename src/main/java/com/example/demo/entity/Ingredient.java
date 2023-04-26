@@ -12,11 +12,13 @@ import java.util.UUID;
 @Entity
 public class Ingredient {
     @Id
-    UUID id;
-    String name;
+    private UUID id;
+    @Column(unique = true)
+    private String name;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "ingredients", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    List<Product> products;
+//    @JsonIgnore
+//    @ManyToMany(mappedBy = "ingredients", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ingredient",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<IngredientProduct> ingredientProducts;
 
 }

@@ -14,23 +14,25 @@ import java.util.UUID;
 //        discriminatorType = DiscriminatorType.STRING)
 public class Product {
     @Id
-    UUID id;
-    String name;
-    int volume;
+    private UUID id;
+    private String name;
+    private int volume;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    Category category;
+    private Category category;
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    List<ProductBakery> productBakeries;
+    private List<ProductBakery> productBakeries;
 
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "ingredient_product",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
-    List<Ingredient> ingredients;
+//    @JsonIgnore
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "ingredient_product",
+//            joinColumns = @JoinColumn(name = "product_id"),
+//            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<IngredientProduct> ingredientProducts;
 }

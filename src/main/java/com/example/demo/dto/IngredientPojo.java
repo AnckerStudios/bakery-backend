@@ -14,8 +14,8 @@ import java.util.UUID;
 
 @Data
 public class IngredientPojo {
-    UUID id;
-    String name;
+    private UUID id;
+    private String name;
 
     public static Ingredient toEntity(IngredientPojo pojo){
         Ingredient entity = new Ingredient();
