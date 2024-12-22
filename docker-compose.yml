@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  client-backend:
+    image: msvc-backend:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - single-lab-maga
+    environment:
+      - SERVER_PORT= 8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/donuts
