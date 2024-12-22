@@ -11,6 +11,7 @@ import com.example.demo.repository.BakeryRepository;
 import com.example.demo.repository.IngredientRepository;
 import com.example.demo.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -51,6 +52,7 @@ public class ProductService {
 //        return bakeryRepository.findByName().stream().map(BakeryPojo::fromEntity).collect(Collectors.toList());
 //    }
 
+    @Transactional
     public ProductPojo save(ProductPojo productPojo, MultipartFile image) {
         if(productPojo.getId() == null)
             productPojo.setId(UUID.randomUUID());
@@ -65,10 +67,9 @@ public class ProductService {
                 file.delete();
             throw new RuntimeException(e);
         }
+    }
 
-
-        }
-
+    @Transactional
     public void delete(UUID id) {
         File file = new File(Utils.IMAGE_PATH.getPath()+id+".png");
         if(file.exists())
@@ -109,7 +110,7 @@ public class ProductService {
         productRepository.save(product);
         return ProductBakeryPojo.fromEntity(productBakery);
     }
-
+    @Transactional
     public byte[] getProductImage(UUID productId) throws IOException {
         Product product = productRepository.findById(productId).orElseThrow();
         return Files.readAllBytes(new File(Utils.IMAGE_PATH.getPath()+productId+".png").toPath());

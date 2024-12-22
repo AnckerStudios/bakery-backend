@@ -15,14 +15,12 @@ public class ProductBakery {
 
     @Id
     @ManyToOne
-    @MapsId("bakeryId")
     @JoinColumn(name = "bakery_id")
 //    @JoinColumn(name = "bakeryCategory_id")
     private Bakery bakery;
 
     @Id
     @ManyToOne
-    @MapsId("productId")
     @JoinColumn(name = "product_id",foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT))
     private Product product;
 //    @Id
